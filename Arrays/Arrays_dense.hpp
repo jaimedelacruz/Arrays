@@ -22,6 +22,10 @@ namespace mem{
 
     // ------------------------------------------------------------------ //
 
+    M_INLINE Array(){};
+    
+    // ------------------------------------------------------------------ //
+
     M_INLINE internal::DDim<idx_t,N> const& getDimensions()const
       {return *static_cast<internal::DDim<idx_t,N> const*>(&Dimensions);}
 
@@ -151,10 +155,79 @@ namespace mem{
       Dimensions = nDim;
     }
 
+    // ------------------------------------------------------------------ //
+
+    void resize(std::array<idx_t,N> const& din)
+    {
+      internal::DDim<idx_t, N>nDim(din);
+      if(nDim.size() != Dimensions.size())
+	Data.allocate(nDim.size());
+      
+      Dimensions = nDim;
+    }
+    
     // ------------------------------------------------------------------ //  
 
     Rep const& rep()const{return Data;}
     Rep&       rep()     {return Data;}
+
+    // ------------------------------------------------------------------ //  
+
+    T max()const{
+      const size_t nel = Data.size();
+      T max_element = Data[0];
+
+      for(size_t ii=1;ii<nel;++ii)
+	max_element = (Data[ii] > max_element)? Data[ii] : max_element;
+
+      return max_element;
+    }
+    
+    // ------------------------------------------------------------------ //  
+    
+    T min()const{
+      const size_t nel = Data.size();
+      T min_element = Data[0];
+
+      for(size_t ii=1;ii<nel;++ii)
+	min_element = (Data[ii] < min_element)? Data[ii] : min_element;
+
+      return min_element;
+    }
+
+    // ------------------------------------------------------------------ //  
+
+    idx_t argmin()const
+    {
+      const size_t nel = Data.size();
+      T min_element = Data[0];
+      idx_t imin =0;
+      
+      for(size_t ii=1;ii<nel;++ii){
+	if(Data[ii] < min_element){
+	  min_element = Data[ii];
+	  imin = ii;
+	}
+      }
+      return imin;
+    }
+    
+    // ------------------------------------------------------------------ //  
+
+    idx_t argmax()const
+    {
+      const size_t nel = Data.size();
+      T max_element = Data[0];
+      idx_t imax =0;
+      
+      for(size_t ii=1;ii<nel;++ii){
+	if(Data[ii] > max_element){
+	  max_element = Data[ii];
+	  imax = ii;
+	}
+      }
+      return imax;
+    }
     
   }; // class Array
 }

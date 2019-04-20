@@ -104,6 +104,18 @@ namespace mem{
       std::array<idx_t, N> Dim, Off;
       
       M_INLINE DDim(){};
+
+      template<size_t N1>
+      explicit DDim(std::array<idx_t,N1> const &in){
+	static_assert((N1 == N || N1 == 2*N),
+		      "[error] array::DDim: wrong number of dimensions");
+
+	if constexpr (N1 == N){
+	    Dim = in;
+	    Off = {};
+	  }else if(N1 == 2*N)
+	  init2Arrays<0,T,N>(Dim,Off,in);
+      }
       
       template<typename ...S>
       explicit DDim(S... in)
@@ -148,17 +160,19 @@ namespace mem{
       bool allocated;
       
       M_INLINE void allocate(size_t const siz)
-      {
+      {	
 	if(!allocated && !data){
 	  n_elements = siz;
 	  data = amem::aligned_malloc<T>(n_elements*sizeof(T));
 	  allocated = true;
 	}else if(allocated && data){
+
 	  if(siz != n_elements){
 	    data = amem::aligned_realloc<T>(data, siz, n_elements);
 	    n_elements = siz;
 	  }
 	}else if(data && !allocated){
+
 	  if(n_elements != siz){
 	    n_elements = siz; data = NULL;
 	    data = amem::aligned_malloc<T>(n_elements*sizeof(T));
