@@ -42,7 +42,7 @@ namespace mem{
     // ------------------------------------------------------------------ //
 
     template<typename ...S> M_INLINE explicit Array(T* datain, const S... xx):
-      Dimensions(xx...), Data(datain, Dimensions.size()){};
+      Dimensions(xx...), Data(Dimensions.size(),datain){};
     
     // ------------------------------------------------------------------ //
 
@@ -151,6 +151,16 @@ namespace mem{
       Dimensions = nDim;
     }
 
+    // ------------------------------------------------------------------ //  
+
+    T norm()const{
+      const size_t imax = Data.size();
+      const T* __restrict__ iData = Data.getData();
+      T iNorm = static_cast<T>(0);
+      for(size_t ii=0; ii<imax; ++ii) iNorm += iData[ii]*iData[ii];
+      return sqrt(iNorm);
+    }
+    
     // ------------------------------------------------------------------ //  
 
     Rep const& rep()const{return Data;}
