@@ -465,6 +465,21 @@ namespace mem{
     return Array<T,N,SOperation<T,R2,E10<T>>>(SOperation<T,R2,E10<T>>(b.rep()));
   }
 
+
+  // --- Minus operator without arguiment --- //
+
+  template<typename T>
+  struct Minus{
+    static M_INLINE const T run(T const& var){return -var;} 
+  };
+  
+  
+  template<typename T, size_t N, typename R2>
+  M_INLINE Array<T, N, SOperation<T,R2,Minus<T>>>
+  operator-(Array<T,N,R2> const& b)
+  {
+    return Array<T,N,SOperation<T,R2,Minus<T>>>(SOperation<T,R2,Minus<T>>(b.rep()));
+  }
   
 }
 
