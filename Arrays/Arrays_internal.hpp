@@ -16,7 +16,7 @@
 namespace mem{
   namespace internal{
 
-    void array_error(std::string const &error_msg, std::string const &error_funct){
+    M_INLINE void array_error(std::string const &error_msg, std::string const &error_funct){
       fprintf(stderr, "[error] %s: %s\n", error_funct.c_str(), error_msg.c_str());
       exit(1);
     }
@@ -206,8 +206,9 @@ namespace mem{
       
       
       constexpr M_INLINE size_t size()const{return n_elements;}
-      
-      M_INLINE T* getData()const{return data;}
+
+      M_INLINE       T* getData()const{return data;}
+      //M_INLINE const T* getDataConst()const{return data;}
       
       void resize(size_t const siz)
       {
@@ -222,8 +223,8 @@ namespace mem{
 	data = NULL;
       }
 
-      M_INLINE T const& operator[](size_t const ii)const{return data[ii];}
-      M_INLINE T&       operator[](size_t const ii){return data[ii];}
+      M_INLINE      T& operator[](size_t const ii)     {return getData()[ii];}
+      M_INLINE       T operator[](size_t const ii)const{return getData()[ii];}
 
       
     };

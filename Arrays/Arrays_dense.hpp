@@ -22,6 +22,10 @@ namespace mem{
 
     // ------------------------------------------------------------------ //
 
+    M_INLINE T* getDataBlock(){return Data.getData();}
+    
+    // ------------------------------------------------------------------ //
+
     M_INLINE Array(){};
     
     // ------------------------------------------------------------------ //
@@ -50,22 +54,30 @@ namespace mem{
     
     // ------------------------------------------------------------------ //
 
+    
     template<typename ...S>
-    M_INLINE T &operator()(const S... indexes)const
-      {
-	return Data.getData()
+    M_INLINE T &operator()(const S... indexes)
+    {
+      return Data.getData()
 	  [internal::linearize_dimensions<N-1,idx_t,N>::run(Dimensions.getConstRefDim(),
 							    Dimensions.getConstRefOff(),
 							    {indexes...})];
       }
-
     
     // ------------------------------------------------------------------ //
 
-    M_INLINE T &operator[](size_t const index){return Data[index];}
-
+    template<typename ...S>
+    M_INLINE  const T &operator()(const S... indexes)const
+    {
+      return Data.getData()
+	[internal::linearize_dimensions<N-1,idx_t,N>::run(Dimensions.getConstRefDim(),
+							  Dimensions.getConstRefOff(),
+							  {indexes...})];
+    }
+    
     // ------------------------------------------------------------------ //
 
+    M_INLINE  T& operator[](size_t const ii){return Data[ii];}
     M_INLINE decltype(auto) operator[](size_t const ii)const{return Data[ii];}
 
     // ------------------------------------------------------------------ //
