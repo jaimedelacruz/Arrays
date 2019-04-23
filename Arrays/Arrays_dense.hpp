@@ -53,8 +53,7 @@ namespace mem{
       Dimensions(xx...), Data(Dimensions.size(),datain){};
     
     // ------------------------------------------------------------------ //
-
-    
+    /*
     template<typename ...S>
     M_INLINE T &operator()(const S... indexes)
     {
@@ -63,11 +62,11 @@ namespace mem{
 							    Dimensions.getConstRefOff(),
 							    {indexes...})];
       }
-    
+    */
     // ------------------------------------------------------------------ //
 
     template<typename ...S>
-    M_INLINE  const T &operator()(const S... indexes)const
+    M_INLINE  T &operator()(const S... indexes)const
     {
       return Data.getData()
 	[internal::linearize_dimensions<N-1,idx_t,N>::run(Dimensions.getConstRefDim(),
@@ -250,6 +249,20 @@ namespace mem{
       }
       return imax;
     }
+    
+    // ------------------------------------------------------------------ //  
+    
+    M_INLINE T sum()const
+    {
+      const size_t nel = Data.size();
+      const T* __restrict__ iData = Data.getData();
+
+      T sum = static_cast<T>(0);
+      for(size_t ii=0; ii<nel;++ii) sum += iData[ii];
+
+      return sum;
+    }
+
     
   }; // class Array
 }

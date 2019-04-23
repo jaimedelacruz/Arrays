@@ -118,13 +118,13 @@ namespace mem{
       }
       
       template<typename ...S>
-      explicit DDim(S... in)
+      explicit DDim(const S... in)
       {
 	static_assert((sizeof...(S) == N || sizeof...(S) == 2*N),
 		      "[error] array::DDim: wrong number of dimensions");
 	
 	if constexpr (sizeof...(S) == N){
-	    Dim = {in...};
+	    Dim = {in...};//std::array<idx_t,N>(in...);
 	    Off = {};
 	  }else if(sizeof...(S) == 2*N)
 	  init2Arrays<0,T,N>(Dim,Off,in...);
@@ -206,9 +206,7 @@ namespace mem{
       
       
       constexpr M_INLINE size_t size()const{return n_elements;}
-
       M_INLINE       T* getData()const{return data;}
-      //M_INLINE const T* getDataConst()const{return data;}
       
       void resize(size_t const siz)
       {
@@ -223,8 +221,8 @@ namespace mem{
 	data = NULL;
       }
 
-      M_INLINE      T& operator[](size_t const ii)     {return getData()[ii];}
-      M_INLINE       T operator[](size_t const ii)const{return getData()[ii];}
+      //M_INLINE       T& operator[](size_t const ii)     {return getData()[ii];}
+      M_INLINE  T& operator[](size_t const ii)const{return getData()[ii];}
 
       
     };
