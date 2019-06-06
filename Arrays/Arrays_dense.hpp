@@ -53,7 +53,7 @@ namespace mem{
       Dimensions(xx...), Data(Dimensions.size(),datain){};
     
     // ------------------------------------------------------------------ //
-    /*
+    
     template<typename ...S>
     M_INLINE T &operator()(const S... indexes)
     {
@@ -62,13 +62,13 @@ namespace mem{
 							    Dimensions.getConstRefOff(),
 							    {indexes...})];
       }
-    */
+    
     // ------------------------------------------------------------------ //
 
     template<typename ...S>
-    M_INLINE  T &operator()(const S... indexes)const
+    M_INLINE  const T &operator()(const S... indexes)const
     {
-      return Data.getData()
+      return Data.getDataConst()
 	[internal::linearize_dimensions<N-1,idx_t,N>::run(Dimensions.getConstRefDim(),
 							  Dimensions.getConstRefOff(),
 							  {indexes...})];

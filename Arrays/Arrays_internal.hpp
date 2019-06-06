@@ -11,6 +11,7 @@
 #include <array>
 #include <iostream>
 #include <string>
+#include <cassert>
 //
 
 namespace mem{
@@ -34,6 +35,7 @@ namespace mem{
 	if((elem >= std::get<idx>(Dim)) || (elem < 0)){
 	  char buffer[85]; sprintf(buffer,"array offset in dimension %ld is out of range [%ld] !C [%ld - %ld], exiting!\n",
 				   idx, std::get<idx>(xx),std::get<idx>(Off),std::get<idx>(Off)+std::get<idx>(Dim)-1);
+	  
 	  array_error(std::string(buffer), "linearize_dimensions::run"); 
 	}
 	return elem + std::get<idx>(Dim) * linearize_dimensions<idx-1,T,N>::run(Dim,Off,xx);
@@ -206,8 +208,9 @@ namespace mem{
       
       
       constexpr M_INLINE size_t size()const{return n_elements;}
-      M_INLINE       T* getData()const{return data;}
-      
+      M_INLINE        T* getData()      const{return data;}
+      M_INLINE  const T*  getDataConst()const{return static_cast<const T*>(data);}
+
       void resize(size_t const siz)
       {
 	allocate(siz);
