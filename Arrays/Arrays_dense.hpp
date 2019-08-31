@@ -158,7 +158,7 @@ namespace mem{
       static_assert(sizeof...(S) == N || sizeof...(S) == 2*N,
 		    "wrong number of indexes");
       
-      internal::DDim<idx_t, N>nDim(indexes...);
+      internal::DDim<idx_t, N> nDim(indexes...);
       
       if(nDim.size() != Dimensions.size())
 	Data.allocate(nDim.size());

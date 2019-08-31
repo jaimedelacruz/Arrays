@@ -13,7 +13,7 @@
 
 #include <cassert>
 #include <cstring>
-
+#include <iostream>
   // ************************************************************************************** //
 
 #define ALIGN_TO_BOUNDARY(n) __attribute__((aligned(n)))
@@ -120,6 +120,7 @@ namespace amem{
     assert((size<16 || (std::size_t(result)%16)==0) && "System's malloc returned an unaligned pointer. Compile with MALLOC_ALREADY_ALIGNED=0 to fallback to handmade alignd memory allocator.");
 #endif
 #else
+    
     result = handmade_aligned_malloc(size);
 #endif
     
@@ -154,7 +155,7 @@ namespace amem{
 #if (DEFAULT_ALIGN_BYTES==0) || MALLOC_ALREADY_ALIGNED
       result = std::realloc((void*)ptr,new_size);
 #else
-      result = handmade_aligned_realloc((void*)ptr,new_size,old_size);
+      result = handmade_aligned_realloc(static_cast<void*>(ptr),new_size,old_size);
 #endif
       
       return static_cast<T*>(result);

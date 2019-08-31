@@ -12,6 +12,8 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <csignal>
+
 //
 
 namespace mem{
@@ -19,7 +21,7 @@ namespace mem{
 
     M_INLINE void array_error(std::string const &error_msg, std::string const &error_funct){
       fprintf(stderr, "[error] %s: %s\n", error_funct.c_str(), error_msg.c_str());
-      exit(1);
+      std::raise(SIGINT);
     }
 
     // --------------------------------------------------------------- //
@@ -162,15 +164,21 @@ namespace mem{
       bool allocated;
       
       M_INLINE void allocate(size_t const siz)
-      {	
+      {
+
 	if(!allocated && !data){
+
 	  n_elements = siz;
 	  data = amem::aligned_malloc<T>(n_elements*sizeof(T));
 	  allocated = true;
+
 	}else if(allocated && data){
 
 	  if(siz != n_elements){
-	    data = amem::aligned_realloc<T>(data, siz, n_elements);
+	    //data = amem::aligned_realloc<T>(data, siz, n_elements);
+	    amem::aligned_free<T>(data);
+	    data = amem::aligned_malloc<T>(n_elements*sizeof(T));
+	    
 	    n_elements = siz;
 	  }
 	}else if(data && !allocated){
